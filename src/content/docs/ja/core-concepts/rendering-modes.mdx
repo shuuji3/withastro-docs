@@ -1,54 +1,54 @@
 ---
-title: "Rendering Modes"
+title: "レンダリングモード"
 i18nReady: true
 ---
 import PackageManagerTabs from '~/components/tabs/PackageManagerTabs.astro';
 import RecipeLinks from '~/components/RecipeLinks.astro';
 
-Your Astro project code must be **rendered** to HTML in order to be displayed on the web. 
+Astroプロジェクトをウェブ上で表示するためには、HTMLとして**レンダリング**する必要があります。
 
-Astro pages, routes, and API endpoints can be either [pre-rendered at build time](#pre-rendered) or [rendered on demand by a server](#on-demand-rendered) when a route is requested. With [Astro islands](/en/concepts/islands/), you can also include some client-side rendering when necessary.
+Astroのページ、ルート、APIエンドポイントは、[ビルド時にプリレンダリングする](#プリレンダリング)ことも、ルートがリクエストされたときに[サーバーによりオンデマンドでレンダリングする](#オンデマンドレンダリング)こともできます。[Astroアイランド](/ja/concepts/islands/)を使用すれば、必要に応じてクライアントサイドのレンダリングを含めることも可能です。
 
-In Astro, most of the processing occurs on the server, instead of in the browser. This generally makes your site or app faster than client-side rendering when viewed on less-powerful devices or on slower internet connections. Server-rendered HTML is fast, SEO friendly, and accessible by default.
+Astroでは、処理のほとんどはブラウザではなくサーバー上で実行されます。これにより、一般に処理能力の低いデバイスや低速のインターネット接続で表示したときに、クライアントサイドのレンダリングを行うよりもサイトやアプリが高速になります。サーバーでレンダリングされたHTMLは高速で、SEOフレンドリーであり、デフォルトでアクセシブルです。
 
-## Server `output` modes
+## サーバーの`output`モード
 
-You can configure how your pages are rendered in your [`output` configuration](/en/reference/configuration-reference/#output).
+ページのレンダリング方法は、[`output`設定](/ja/reference/configuration-reference/#output)で設定できます。
 
-### Pre-rendered
+### プリレンダリング
 
-The **default rendering mode is __`output: 'static'`__**, which creates the HTML for all your page routes at build time.
+**デフォルトのレンダリングモードは __`output: 'static'`__ です**。これは、ビルド時にすべてのページルートに対してHTMLを作成します。
 
-In this mode, **your entire site will be pre-rendered** and the server will have all pages built ahead of time and ready to send to the browser. The same HTML document is sent to the browser for every visitor, and a full-site rebuild is required to update the contents of the page. This method is also known as **static site generation (SSG)**. 
+このモードでは、**サイト全体がプリレンダリングされ**、サーバーはすべてのページを事前にビルドしてブラウザに送信する準備を完了します。同じHTMLドキュメントがすべての訪問者にブラウザに送信され、ページのコンテンツを更新するにはサイト全体の再ビルトが必要になります。この方法は、**スタティックサイトジェネレーション（static site generation、SSG）** とも呼ばれます。
 
-By default, all Astro projects are configured to be pre-rendered at build time (statically-generated) to provide the most lightweight browser experience. The browser does not need to wait for any HTML to build because the server does not need to generate any pages on demand. Your site is not dependent on the performance of a backend data source, and once built, will remain available to visitors as a static site as long as your server is functioning.
+デフォルトでは、すべてのAstroプロジェクトは、最も軽量なブラウザ体験を提供するために、ビルド時にプリレンダリングされる（スタティックに生成される）ように設定されます。サーバーはどのページもオンデマンドで生成する必要がないため、ブラウザはどのHTMLの生成も待つ必要はありません。サイトはバックエンドのデータソースの性能に依存せず、一度ビルドされれば、サーバーが動作している限り、訪問者はスタティックサイトとして引き続き利用できます。
 
-Static sites can include [Astro islands](/en/concepts/islands/) for interactive UI components (or even entire embedded client-side rendered apps!) written in the [UI framework of your choice](/en/core-concepts/framework-components/) in an otherwise static, pre-rendered page.
+スタティックサイトには、スタティックでプリレンダリングされたページ内に、[自由に選んだUIフレームワーク](/ja/core-concepts/framework-components/)で書かれたインタラクティブなUIコンポーネント（あるいは、組み込まれてクライアント側でレンダリングされるアプリ全体！）のために[Astroアイランド](/ja/concepts/islands/)として含められます。
 
-Astro's [View Transitions API](/en/guides/view-transitions/) are also available in `static` mode for animation and state persistence across page navigation. Static sites can also use [middleware](/en/guides/middleware/) to intercept and transform response data from a request.
+Astroの[ビュートランジションAPI](/ja/guides/view-transitions/)は、ページナビゲーションを横断するアニメーションやステートの永続化のために、`static`モード内でも利用できます。スタティックサイトは、[ミドルウェア](/ja/guides/middleware/)を利用することで、リクエストのレスポンスデータをインターセプトして変換することもできます
 
 :::tip
-Astro's default `static` mode is a powerful, modern-feeling choice for content-heavy sites that update infrequently, and display the same page content to all visitors.
+Astroのデフォルトの`static`モードは、更新頻度が低く、すべての訪問者に同じページコンテンツを表示する、コンテンツが多いサイトにとって、強力でモダンな選択肢です。
 :::
 
-### On-demand rendered
+### オンデマンドレンダリング
 
-Astro's other two output modes can be configured to enable **on-demand rendering of some or all of your pages, routes or API endpoints**:
-  - __`output: 'server'`__ for highly dynamic sites with most or all on-demand routes.
-  - __`output: 'hybrid'`__ for mostly static sites with some on-demand routes. 
-  
-Since they are generated per visit, these routes can be customized for each viewer. For example, a page rendered on demand can show a logged-in user their account information or display freshly updated data without requiring a full-site rebuild. On-demand rendering on the server at request time is also known as **server-side rendering (SSR)**.
+Astroの他の2つのoutputモードは、**ページ、ルート、APIエンドポイントの一部または全部のオンデマンドレンダリング**を有効にすることで設定できます。
+  - __`output: 'server'`__: ほとんどまたはすべてがオンデマンドのルートである、非常に動的なサイトのための設定。
+  - __`output: 'hybrid'`__: 一部がオンデマンドルートであり、ほとんどがスタティックなサイトのための設定。
 
-[Consider enabling `server` or `hybrid` mode](/en/guides/server-side-rendering/#enable-on-demand-server-rendering) in your Astro project if you need the following:
+オンデマンドルートは訪問ごとに生成されるため、閲覧者ごとにカスタマイズできます。たとえば、オンデマンドでレンダリングされたページは、ログインユーザーにアカウント情報や新規に更新されたデータを、サイト全体を再ビルドする必要なく表示できます。リクエスト時のサーバー上でのオンデマンドレンダリングは、**サーバーサイドレンダリング（server-side rendering、SSR）** としても知られています。
 
-- **API endpoints**: Create specific pages that function as API endpoints for tasks like database access, authentication, and authorization while keeping sensitive data hidden from the client.
+以下の機能が必要なAstroプロジェクトでは、[`server`または`hybrid`モードを有効にする](/ja/guides/server-side-rendering/#enable-on-demand-server-rendering)ことを検討してください。
 
-- **Protected pages**: Restrict access to a page based on user privileges, by handling user access on the server.
+- **APIエンドポイント**: 機密データをクライアントから隠しながら、データベースアクセス、認証、認可などのタスクのためにAPIエンドポイントとして機能する、特定のページを作成します。
 
-- **Frequently changing content**: Generate individual pages without requiring a static rebuild of your site. This is useful when the content of a page updates frequently, for example displaying data from an API called dynamically with `fetch()`.
+- **保護されたページ**: サーバー上でユーザーアクセスを処理し、ユーザーの権限に基づいてページへのアクセスを制限します。
 
-Both `server` and `hybrid` output modes allow you to include [Astro islands](/en/concepts/islands/) for interactivity (or even entire embedded client-side rendered apps!) in your choice of [UI frameworks](/en/core-concepts/framework-components/). With [middleware](/en/guides/middleware/) and Astro's [View Transitions API](/en/guides/view-transitions/) for animations and preserving state across route navigations, even highly interactive apps are possible.
+- **頻繁に更新されるコンテンツ**: サイトの静的な再ビルドを必要とせずに個別のページを生成します。これは、たとえば`fetch()`で動的に呼んだAPIのデータを表示するなど、ページのコンテンツが頻繁に更新されるときに便利です。
+
+`server`と`hybrid`のどちらのoutputモードでも、インタラクティブ性（あるいは、組み込まれてクライアント側でレンダリングされるアプリ全体！）のために、好きな[UIフレームワーク](/ja/core-concepts/framework-components/)で書かれた[Astroアイランド](/ja/concepts/islands/)を含められます。[ミドルウェア](/ja/guides/middleware/)と、ルートナビゲーションを横断するアニメーションやステートの永続化のためにAstroの[ビュートランジションAPI](/ja/guides/view-transitions/)を使用すれば、さらに高度にインタラクティブなアプリも可能です。
 
 :::tip
-On demand server-rendering in Astro provides a true app experience without the JavaScript overhead of a client-side, single-page application.
+Astroのオンデマンドサーバーレンダリングは、クライアントサイドのシングルページアプリケーションのJavaScriptのオーバーヘッドがない、本物のアプリ体験を提供します。
 :::
